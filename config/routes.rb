@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   
 
   get 'starts/reload_transferts' => 'starts#reload_transferts', as: 'reload_transferts'
+  get 'starts/reload_links' => 'starts#reload_links', as: 'reload_links'
   get 'transferts_map' => 'transferts#map', as: :transferts_map
   
   resources :transferts

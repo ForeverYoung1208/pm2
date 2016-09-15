@@ -3,6 +3,7 @@ class Transfert
 	field :code_koatuu, type: String
 	field :code, type: String
 	field :name, type: String
+	field :name_koatuu, type: String
 	field :coord_x, type: Float
 	field :coord_y, type: Float
 	field :baz_dot, type: BigDecimal

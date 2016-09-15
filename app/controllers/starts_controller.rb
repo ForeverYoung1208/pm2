@@ -5,6 +5,23 @@ class StartsController < ApplicationController
 
   end
 
+  def reload_links
+    require 'csv'    
+
+    begin
+      csv = CSV.read('db/budget_koatu_link.csv', :col_sep => ';', :headers => true, :encoding => 'windows-1251:utf-8')
+    rescue Exception => e
+      logger.error 'possible that file db/budget_koatu_link.csv doesnt exist: ' + e.message
+    end
+
+    csv.each do |row|
+      Transfert.create!(row.to_hash) if row
+    end
+
+
+
+  end
+
 
 
   # GET /starts
