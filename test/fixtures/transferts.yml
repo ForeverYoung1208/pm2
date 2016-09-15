@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  code_koatuu: MyString
+  code: MyString
+  name: MyString
+  coord_x: 1.5
+  coord_y: 1.5
+  baz_dot: 
+  rev_dot: 
+
+two:
+  code_koatuu: MyString
+  code: MyString
+  name: MyString
+  coord_x: 1.5
+  coord_y: 1.5
+  baz_dot: 
+  rev_dot: 

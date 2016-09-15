@@ -1,9 +1,17 @@
 Rails.application.routes.draw do
+  
+
+  get 'starts/reload_transferts' => 'starts#reload_transferts', as: 'reload_transferts'
+  get 'transferts_map' => 'transferts#map', as: :transferts_map
+  
+  resources :transferts
+  resources :starts
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  root 'starts#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
