@@ -1,27 +1,15 @@
 class StartsController < ApplicationController
 #  before_action :set_start, only: [:show, :edit, :update, :destroy]
+
+  def reload_linktable
+    Transfert.destroy_all
+    Transfert.load_linktable_from_csv_file('db/budget_koatu_link.csv')
+  end
+
   
-  def reload_transferts
-
+  def attach_transfert_values
+    @affected_rows = Transfert.attach_transfert_values('db/budget.csv')
   end
-
-  def reload_links
-    require 'csv'    
-
-    begin
-      csv = CSV.read('db/budget_koatu_link.csv', :col_sep => ';', :headers => true, :encoding => 'windows-1251:utf-8')
-    rescue Exception => e
-      logger.error 'possible that file db/budget_koatu_link.csv doesnt exist: ' + e.message
-    end
-
-    csv.each do |row|
-      Transfert.create!(row.to_hash) if row
-    end
-
-
-
-  end
-
 
 
   # GET /starts

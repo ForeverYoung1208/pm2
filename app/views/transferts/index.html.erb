@@ -5,13 +5,17 @@
 <table>
   <thead>
     <tr>
-      <th>Code koatuu</th>
       <th>Code</th>
       <th>Name</th>
+      <th>Code koatuu</th>
+      <th>Name koatuu</th>
       <th>Coord x</th>
       <th>Coord y</th>
       <th>Baz dot</th>
       <th>Rev dot</th>
+      <th>osv_subv</th>
+      <th>med_subv</th>
+      <th>comment</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -19,13 +23,17 @@
   <tbody>
     <% @transferts.each do |transfert| %>
       <tr>
-        <td><%= transfert.code_koatuu %></td>
         <td><%= transfert.code %></td>
         <td><%= transfert.name %></td>
+        <td><%= transfert.code_koatuu %></td>
+        <td><%= transfert.name_koatuu %></td>
         <td><%= transfert.coord_x %></td>
         <td><%= transfert.coord_y %></td>
         <td><%= transfert.baz_dot %></td>
         <td><%= transfert.rev_dot %></td>
+        <td><%= transfert.osv_subv %></td>
+        <td><%= transfert.med_subv %></td>
+        <td><%= transfert.comment %></td>
         <td><%= link_to 'Show', transfert %></td>
         <td><%= link_to 'Edit', edit_transfert_path(transfert) %></td>
         <td><%= link_to 'Destroy', transfert, method: :delete, data: { confirm: 'Are you sure?' } %></td>
