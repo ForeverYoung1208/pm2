@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   
 
 
+  resources :areas
   get 'starts/load_areas_from_json_file' => 'starts#load_areas_from_json_file', as: 'load_areas_from_json_file'
   get 'starts/reload_linktable' => 'starts#reload_linktable', as: 'reload_linktable'
   get 'starts/attach_transfert_values' => 'starts#attach_transfert_values', as: 'attach_transfert_values'

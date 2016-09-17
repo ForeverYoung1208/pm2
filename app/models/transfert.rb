@@ -38,11 +38,6 @@ class Transfert
 				
 	end
 
-	def self.load_areas_from_json_file(file_path)
-		file = File.read( file_path )
-		areas_hash = JSON.parse(file)
-	end
-
 
 	## Kyiv
 	def origin
