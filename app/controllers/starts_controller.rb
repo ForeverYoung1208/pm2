@@ -11,6 +11,15 @@ class StartsController < ApplicationController
     @affected_rows = Transfert.attach_transfert_values('db/budget.csv')
   end
 
+  def load_areas_from_json_file
+    @areas_hash = Transfert.load_areas_from_json_file('db/oblasti_json2.txt')
+    Transfert.attach_areas_from_hash( @areas_hash )
+    
+
+
+  end
+
+
 
   # GET /starts
   # GET /starts.json

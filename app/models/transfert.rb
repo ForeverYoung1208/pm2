@@ -14,9 +14,7 @@ class Transfert
 
 
 	def self.load_linktable_from_csv_file(file_path)
-
 		csv = load_csv(file_path)
-
 		csv.each do |row|
 			begin
 				self.create!(row.to_hash) if row
@@ -34,11 +32,15 @@ class Transfert
 		csv.each do |row|
 			self.where( :code => row["code"]).update_all( row.to_hash )
 		end
-
 	end
 
 	def self.attach_xy_coordinates()
 				
+	end
+
+	def self.load_areas_from_json_file(file_path)
+		file = File.read( file_path )
+		areas_hash = JSON.parse(file)
 	end
 
 
@@ -61,7 +63,7 @@ class Transfert
 	def value
 		self.baz_dot = 0 if !self.baz_dot
 		self.rev_dot = 0 if !self.rev_dot
-		result = self.baz_dot - self.rev_dot
+		result = self.baz_dot.to_f - self.rev_dot.to_f
 	end
 
 private

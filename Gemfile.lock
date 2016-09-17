@@ -188,6 +188,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   jbuilder (~> 2.0)
   jquery-rails
+  json
   mongoid (~> 4.0.0)
   pry-byebug
   pry-rails
