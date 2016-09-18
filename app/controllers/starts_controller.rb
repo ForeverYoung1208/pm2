@@ -13,7 +13,8 @@ class StartsController < ApplicationController
 
   def load_areas_from_json_file
     Area.destroy_all
-    @areas_hash = Area.load_areas_from_json_file('db/oblasti_json2.txt')    
+    Area.load_areas_from_json_file('db/oblasti_json2.txt')
+    @areas = Area.all
   end
 
 
