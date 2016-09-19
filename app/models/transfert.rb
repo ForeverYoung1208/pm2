@@ -17,12 +17,7 @@ class Transfert
 	def self.load_linktable_from_csv_file(file_path)
 		csv = load_csv(file_path)
 		csv.each do |row|
-#			begin
 				self.create!(row.to_hash) if row
-			# rescue
-			# 	debugger
-			# 	logger.error 'transfet creation error: ' + e.message
-			# end
 		end
 	end
 
@@ -66,11 +61,7 @@ private
 
 	def self.load_csv(file_path)
 		require 'csv'   		
-#		begin
-			csv = CSV.read(file_path, :col_sep => ';', :headers => true, :encoding => 'windows-1251:utf-8')
-		# rescue Exception => e
-		# 	logger.error 'possible that file #{file_path} doesnt exist: ' + e.message
-		# end
+		csv = CSV.read(file_path, :col_sep => ';', :headers => true, :encoding => 'windows-1251:utf-8')
 	end
 
 

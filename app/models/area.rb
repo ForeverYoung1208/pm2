@@ -15,7 +15,7 @@ class Area
   field :feature_collection, type: Hash
 
 	def self.load_areas_from_json_file(file_path)
-		file = File.read( file_path )
+		file = File.read( file_path, :encoding => 'windows-1251' )
 		pf = JSON.parse(file)
 		pf['features'].each do |a|
 			self.create!(
