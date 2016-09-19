@@ -50,7 +50,7 @@ class Transfert
 		end
 	end
 
-	# transfert value relative to budget. positive = > baz_dot
+	# transfert value sign is relative to type of dotation
 	def value
 		self.baz_dot = 0 if !self.baz_dot
 		self.rev_dot = 0 if !self.rev_dot
