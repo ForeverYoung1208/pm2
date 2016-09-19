@@ -17,6 +17,14 @@ class StartsController < ApplicationController
     @areas = Area.all
   end
 
+  def build_links_to_area
+    @transferts = Transfert.all
+    @transferts.each do |t|
+      t.build_link_to_area
+    end
+
+  end
+
 
 
   # GET /starts

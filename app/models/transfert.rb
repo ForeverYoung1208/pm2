@@ -12,6 +12,8 @@ class Transfert
 	field :osv_subv, type: BigDecimal
 	field :med_subv, type: BigDecimal
 	field :comment, type: String
+	field :area_id, type: String
+
 
 
 	def self.load_linktable_from_csv_file(file_path)
@@ -30,8 +32,12 @@ class Transfert
 		end
 	end
 
-	def self.attach_xy_coordinates()
-				
+	def build_link_to_area
+		if name_koatuu
+############################### todo			#################################
+			a = Area.find({"properties.title" => "/.*#{name_koatuu[0..5]}/"})
+			area_id = a._id
+		end
 	end
 
 
