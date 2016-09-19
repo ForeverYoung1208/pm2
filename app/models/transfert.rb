@@ -4,6 +4,7 @@ class Transfert
 	field :code, type: String
 	field :name, type: String
 	field :name_koatuu, type: String
+	field :openbudget_id, type: String
 	field :coord_x, type: Float
 	field :coord_y, type: Float
 	field :baz_dot, type: BigDecimal
@@ -16,12 +17,12 @@ class Transfert
 	def self.load_linktable_from_csv_file(file_path)
 		csv = load_csv(file_path)
 		csv.each do |row|
-			begin
+#			begin
 				self.create!(row.to_hash) if row
-			rescue
-				debugger
-				logger.error 'transfet creation error: ' + e.message
-			end
+			# rescue
+			# 	debugger
+			# 	logger.error 'transfet creation error: ' + e.message
+			# end
 		end
 	end
 
@@ -65,11 +66,11 @@ private
 
 	def self.load_csv(file_path)
 		require 'csv'   		
-		begin
+#		begin
 			csv = CSV.read(file_path, :col_sep => ';', :headers => true, :encoding => 'windows-1251:utf-8')
-		rescue Exception => e
-			logger.error 'possible that file #{file_path} doesnt exist: ' + e.message
-		end
+		# rescue Exception => e
+		# 	logger.error 'possible that file #{file_path} doesnt exist: ' + e.message
+		# end
 	end
 
 
