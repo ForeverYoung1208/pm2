@@ -22,7 +22,6 @@ class StartsController < ApplicationController
     @transferts.each do |t|
       t.build_link_to_area
     end
-
   end
 
 

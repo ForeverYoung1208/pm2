@@ -12,7 +12,8 @@ class Transfert
 	field :osv_subv, type: BigDecimal
 	field :med_subv, type: BigDecimal
 	field :comment, type: String
-	field :area_id, type: String
+	has_one :area
+#	field :area_id, type: String
 
 
 
@@ -33,10 +34,10 @@ class Transfert
 	end
 
 	def build_link_to_area
-		if name_koatuu
-############################### todo			#################################
-			a = Area.find({"properties.title" => "/.*#{name_koatuu[0..5]}/"})
-			area_id = a._id
+		if name_koatuu and !area
+			a = Area.where({"properties.title": /#{name_koatuu[0..5]}/i}).first
+#			a = Area.where({"properties.title": /#{name_koatuu[0..5]}/i}).where("properties.level": "area").first
+			self.area = a
 		end
 	end
 
