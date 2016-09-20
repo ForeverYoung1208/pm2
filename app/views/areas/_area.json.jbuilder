@@ -1,2 +1,7 @@
-json.extract! area, :id, :feature_collection, :created_at, :updated_at
-json.url area_url(area, format: :json)
+json.type "FeatureCollection"
+json.features do
+	json.array! [1] do |i|
+		json.type "Feature"
+		json.extract! area, :geometry, :properties
+	end
+end
