@@ -12,6 +12,7 @@ class Transfert
 	field :osv_subv, type: BigDecimal
 	field :med_subv, type: BigDecimal
 	field :comment, type: String
+	field :level, type: String
 	has_one :area
 #	field :area_id, type: String
 
@@ -26,7 +27,7 @@ class Transfert
 
 	def self.attach_transfert_values(file_path)
 		csv = load_csv(file_path)
-		affected_rows = 0
+		# affected_rows = 0
 
 		csv.each do |row|
 			self.where( :code => row["code"]).update_all( row.to_hash )
@@ -34,10 +35,17 @@ class Transfert
 	end
 
 	def build_link_to_area
-		if name_koatuu and !area
+		if name_koatuu 
+			#and !area
 			a = Area.where({"properties.title": /#{name_koatuu[0..5]}/i}).first
 #			a = Area.where({"properties.title": /#{name_koatuu[0..5]}/i}).where("properties.level": "area").first
-			self.area = a
+			if a 
+				self.area = a
+				self.coord_x = a.properties["center"][1]
+				self.coord_y = a.properties["center"][0]
+				self.level = "area"
+				self.save!
+			end
 		end
 	end
 

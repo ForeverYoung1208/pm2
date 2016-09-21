@@ -1,6 +1,9 @@
 #$(document).ready ->
-	# // Washington DC
-destination = [-77.032, 38.913]
+# // Washington DC
+#destination = [-77.032, 38.913]
+
+#$.get('/areas.json', {dataType: 'json'}, (data_areas)->
+
 
 $.get('/transferts.json', {dataType: 'json'}, (data)->
 	flows_data = data
@@ -11,7 +14,7 @@ $.get('/transferts.json', {dataType: 'json'}, (data)->
 
 	# 1/(how many steps from origin to destination)
 	# (smoothness of animation) kdelta = 0.005  500 steps(frames) from origin to destination
-	kdelta = 0.005
+	kdelta = 0.01
 
 	ankdelta = 1 / kdelta
 
@@ -240,6 +243,14 @@ $.get('/transferts.json', {dataType: 'json'}, (data)->
 	})
 
 	map.on('load', ->
+
+#=====================================================================               SOURCES			
+
+		map.addSource('areas', {
+				"type": "geojson",
+				"data": "/areas.json"
+		});
+
 		map.addSource('routes', {
 				"type": "geojson",
 				"data": flows
@@ -264,22 +275,60 @@ $.get('/transferts.json', {dataType: 'json'}, (data)->
 		});
 
 
+#=========================================================================     LAYERS
+
+		map.addLayer({
+			"id": "areas_fill_layer",
+			"type": "fill",			
+			"source": "areas",
+			"layout": {},
+			"paint": {
+				"fill-color": "#627BC1",
+				"fill-opacity": 0.2
+			}
+		});
+
+		map.addLayer({
+			"id": "areas_hovered_layer",
+			"type": "fill",			
+			"source": "areas",
+			"layout": {},
+			"paint": {
+				"fill-color": "#728Bd1",
+				"fill-opacity": 0.7
+			},
+			"filter": ["==", "id", ""]			
+		});
+
+		map.addLayer({
+			"id": "areas_borders_layer",
+			"type": "line",			
+			"source": "areas",
+			"layout": {},
+			"paint": {
+				"line-color": "#627BC1",
+				"line-width": 2
+			}
+		});
+
 		map.addLayer({
 			"id": "routes_layer",
 			"source": "routes",
 			"type": "line",
 			"paint": {
-					"line-width": 2,
-					"line-color": "#007cbf"
+				"line-width": 2,
+				"line-color": "#007cbf"
 			}
 		});
+
+
 		map.addLayer({
 			"id": "points_layer",
 			"source": "points",
 			"type": "symbol",
 			"layout": {
-					"icon-image": "bank-11",
-					"icon-allow-overlap": true					
+				"icon-image": "bank-11",
+				"icon-allow-overlap": true					
 			}
 		});
 
@@ -326,7 +375,23 @@ $.get('/transferts.json', {dataType: 'json'}, (data)->
 #				"text-transform": "uppercase",
 				"text-letter-spacing": 0.05					
 			}
-		});		
+		});
+
+
+		`
+		map.on("mousemove", function(e) {
+			var features = map.queryRenderedFeatures(e.point, { layers: ["areas_fill_layer"] });
+			if (features.length) {
+					map.setFilter("areas_hovered_layer", ["==", "id", features[0].properties.id]);
+			} else {
+					map.setFilter("areas_hovered_layer", ["==", "id", ""]);
+			}
+		});
+
+		map.on("mouseout", function() {
+				map.setFilter("route-hover", ["==", "id", ""]);
+		});
+		`
 
 
 		`		
@@ -346,7 +411,4 @@ $.get('/transferts.json', {dataType: 'json'}, (data)->
 		end = 5000;
 		animate();
 	);
-)
-
-
-
+);

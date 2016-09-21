@@ -16,7 +16,8 @@
       <th>osv_subv</th>
       <th>med_subv</th>
       <th>comment</th>
-      <th> area_title </th>
+      <th>level</th>
+      <th>area_title</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -35,6 +36,7 @@
         <td><%= transfert.osv_subv %></td>
         <td><%= transfert.med_subv %></td>
         <td><%= transfert.comment %></td>
+        <td><%= transfert.level %></td>        
         <td><%= transfert.area.properties["title"] if transfert.area  %></td>
         <td><%= link_to 'Show', transfert %></td>
         <td><%= link_to 'Edit', edit_transfert_path(transfert) %></td>
