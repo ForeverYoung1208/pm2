@@ -5,7 +5,7 @@
 #$.get('/areas.json', {dataType: 'json'}, (data_areas)->
 
 
-$.get('/transferts.json', {dataType: 'json'}, (data)->
+$.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 	flows_data = data
 
 	# //Kyiv

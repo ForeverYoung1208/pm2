@@ -13,7 +13,7 @@ class Transfert
 	field :med_subv, type: BigDecimal
 	field :comment, type: String
 	field :level, type: String
-	has_one :area
+	belongs_to :area
 #	field :area_id, type: String
 
 
@@ -35,11 +35,16 @@ class Transfert
 	end
 
 	def build_link_to_area
-		if name_koatuu 
+		if (name_koatuu) && (code_koatuu =~ /00000000$/ )
 			#and !area
+
 			a = Area.where({"properties.title": /#{name_koatuu[0..5]}/i}).first
 #			a = Area.where({"properties.title": /#{name_koatuu[0..5]}/i}).where("properties.level": "area").first
+			logger.debug (a.properties["name"])
 			if a 
+				# if a.properties['title']=~/Дн/
+				# 	debugger
+				# end
 				self.area = a
 				self.coord_x = a.properties["center"][1]
 				self.coord_y = a.properties["center"][0]

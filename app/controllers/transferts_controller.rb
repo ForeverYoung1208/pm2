@@ -8,8 +8,13 @@ class TransfertsController < ApplicationController
 
   # GET /transferts
   # GET /transferts.json
-  def index
-    @transferts = Transfert.all
+  def index 
+    if map_params[:level]
+      @transferts = Transfert.where({:level => map_params[:level]})
+    else
+      @transferts = Transfert.all
+    end
+
   end
 
   # GET /transferts/1
@@ -75,5 +80,9 @@ class TransfertsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def transfert_params
       params.require(:transfert).permit(:code_koatuu, :code, :name, :coord_x, :coord_y, :baz_dot, :rev_dot)
+    end
+
+    def map_params
+      params.permit(:level)
     end
 end

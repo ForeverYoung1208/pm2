@@ -2,7 +2,7 @@ class Area
   include Mongoid::Document
   field :geometry, type: Hash
   field :properties, type: Hash
-  belongs_to :transfert
+  has_one :transfert
   # field :title, type: Sring
   # field :level, type: Sring
   # field :bounds, type: Sring
