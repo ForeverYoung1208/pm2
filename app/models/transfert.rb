@@ -74,7 +74,7 @@ class Transfert
 	def value
 		self.baz_dot = 0 if !self.baz_dot
 		self.rev_dot = 0 if !self.rev_dot
-		result = self.baz_dot.to_f - self.rev_dot.to_f
+		result = (self.baz_dot.to_f - self.rev_dot.to_f).round
 	end
 
 private
