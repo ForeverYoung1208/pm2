@@ -1,16 +1,10 @@
-#$(document).ready ->
-# // Washington DC
-#destination = [-77.032, 38.913]
-
-#$.get('/areas.json', {dataType: 'json'}, (data_areas)->
-
-
 $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 	flows_data = data
 
 	# //Kyiv
 	# 50°27′N 	30°31′E
-	kyiv = [30.445, 50.5166]
+	# center = [30.445, 50.5166]
+	center = [30.5, 49.0]
 
 	# 1/(how many steps from origin to destination)
 	# (smoothness of animation) kdelta = 0.005  500 steps(frames) from origin to destination
@@ -238,8 +232,8 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 		#// style location
 		style: 'mapbox://styles/mapbox/streets-v9'	    
 		#// starting position
-		center: kyiv,
-		zoom: 7
+		center: center,
+		zoom: 5.5
 	})
 
 	map.on('load', ->
@@ -372,7 +366,6 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 				"text-field": "{message}",
 				"text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
 				"text-size": 11,
-#				"text-transform": "uppercase",
 				"text-letter-spacing": 0.05					
 			}
 		});
