@@ -7,13 +7,13 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 	center = [30.5, 49.0]
 
 	# 1/(how many steps from origin to destination)
-	# (smoothness of animation) kdelta = 0.005  500 steps(frames) from origin to destination
+	# kdelta = 0.005  500 steps(frames) from origin to destination
 	kdelta = 0.01
 
 	ankdelta = 1 / kdelta
 
 	# 1/(how often points will spawm) ( kspawn = 500  will spawm point every 500 frame for flow value = 1) 
-	kspawn = 500
+	kspawn = 200
 
 	# spread of flow values from 0 to normal_spread
 	normal_spread = 20
