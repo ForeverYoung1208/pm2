@@ -387,6 +387,18 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 				map.setFilter("route-hover", ["==", "id", ""]);
 		});
 		`
+	
+
+		map.on('click', (e) ->
+			features = map.queryRenderedFeatures(e.point, { layers: ['areas_fill_layer'] });
+			if features.length
+				y = features[0].properties.center.split(',')[0]
+				x = features[0].properties.center.split(',')[1]
+
+				map.flyTo({
+					center: [x,y]
+				});
+		);
 
 
 		`		
