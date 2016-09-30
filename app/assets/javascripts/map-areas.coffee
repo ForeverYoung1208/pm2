@@ -233,7 +233,9 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 		style: 'mapbox://styles/mapbox/streets-v9'	    
 		#// starting position
 		center: center,
-		zoom: 5.5
+		zoom: 5.5,
+		maxZoom: 5.5,
+		minZoom: 3
 	})
 
 	map.on('load', ->
