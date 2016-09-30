@@ -13,4 +13,5 @@
 //= require jquery
 //= require jquery_ujs
 // NOT require turbolinks
-//= require_tree .
+// NOT require_tree .
+//= require map-areas
