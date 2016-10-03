@@ -17,21 +17,21 @@ class Flows_map
 		# spread of flow values from 0 to normal_spread
 		@normal_spread = init_data.normal_spread #20
 
-	#animatre counter
-	@counter = 0;
-	
-	#animatre counter end
-	@end = 5000;
+		#animatre counter
+		@counter = 0;
+		
+		#animatre counter end
+		@end = 5000;
 
-	@flows = 
-		"type": "FeatureCollection",
-		"features": []
-	@points =
-		"type": "FeatureCollection",
-		"features": []		
-	@dots =
-		"type": "FeatureCollection",
-		"features": []
+		@flows = 
+			"type": "FeatureCollection",
+			"features": []
+		@points =
+			"type": "FeatureCollection",
+			"features": []		
+		@dots =
+			"type": "FeatureCollection",
+			"features": []
 
 	preprocessdata: () ->
 		max_value = 0
@@ -169,7 +169,8 @@ class Flows_map
 
 	# calc new positions for points
 	`
-	calc_points_new_position = function(points_f) {
+	Flows_map.prototype.calc_points_new_position = function() {
+		var points_f = this.points
 		var i = points_f.length
 		while (i--){
 			if (points_f[i].step <= ankdelta) {
@@ -182,9 +183,11 @@ class Flows_map
 		}
 	}
 	`
+
 	# function to check the necessity on spawning of new points
-	check_for_spawn = (flows_f) ->
-		for flow_f in flows_f
+
+	check_for_spawn: () ->
+		for flow_f in @flows
 			if flow_f.step_from_spawn >= flow_f.steps_to_spawn
 				switch true
 					when ( +flow_f.value > 0 )
@@ -238,35 +241,35 @@ class Flows_map
 
 	#=====================================================================               SOURCES			
 
-			@map.addSource('areas', {
+			@addSource('areas', {
 					"type": "geojson",
 					"data": "/areas.json"
 			});
 
-			@map.addSource('routes', {
+			@addSource('routes', {
 					"type": "geojson",
-					"data": flows
+					"data": @flows
 			});
 			
-			@map.addSource('points', {
+			@addSource('points', {
 				"type": "geojson",
-				"data": points,
+				"data": @points,
 				"cluster": false
 			});
 
-			@map.addSource('dots', {
+			@addSource('dots', {
 				"type": "geojson",
-				"data": dots,
+				"data": @dots,
 				"cluster": false
 			});
 
-			@map.addSource('labels', {
+			@addSource('labels', {
 				"type": "geojson",
-				"data": dots,
+				"data": @dots,
 				"cluster": false
 			});
 	#=========================================================================     LAYERS
-			@map.addLayer({
+			@addLayer({
 				"id": "areas_fill_layer",
 				"type": "fill",			
 				"source": "areas",
@@ -277,7 +280,7 @@ class Flows_map
 				}
 			});
 
-			@map.addLayer({
+			@addLayer({
 				"id": "areas_hovered_layer",
 				"type": "fill",			
 				"source": "areas",
@@ -289,7 +292,7 @@ class Flows_map
 				"filter": ["==", "id", ""]			
 			});
 
-			@map.addLayer({
+			@addLayer({
 				"id": "areas_borders_layer",
 				"type": "line",			
 				"source": "areas",
@@ -300,7 +303,7 @@ class Flows_map
 				}
 			});
 
-			@map.addLayer({
+			@addLayer({
 				"id": "routes_layer",
 				"source": "routes",
 				"type": "line",
@@ -311,7 +314,7 @@ class Flows_map
 			});
 
 
-			@map.addLayer({
+			@addLayer({
 				"id": "points_layer",
 				"source": "points",
 				"type": "symbol",
@@ -321,7 +324,7 @@ class Flows_map
 				}
 			});
 
-			@map.addLayer({
+			@addLayer({
 				"id": "dots_layer",
 				"source": "dots",
 				"type": "circle",
@@ -352,7 +355,7 @@ class Flows_map
 				}
 			});
 	
-			@map.addLayer({
+			@addLayer({
 				"id": "label_layer",
 				"source": "dots",
 				"type": "symbol",
@@ -366,7 +369,7 @@ class Flows_map
 			});
 
 			`
-			this.map.on("mousemove", function(e) {
+			this.on("mousemove", function(e) {
 				var features = this.map.queryRenderedFeatures(e.point, { layers: ["areas_fill_layer"] });
 				if (features.length) {
 						this.map.setFilter("areas_hovered_layer", ["==", "id", features[0].properties.id]);
@@ -375,13 +378,13 @@ class Flows_map
 				}
 			});
 
-			this.map.on("mouseout", function() {
+			this.on("mouseout", function() {
 					this.map.setFilter("route-hover", ["==", "id", ""]);
 			});
 			`
 		
 
-			@map.on('click', (e) ->
+			@on('click', (e) ->
 				features = @map.queryRenderedFeatures(e.point, { layers: ['areas_fill_layer'] });
 				if features.length
 					y = features[0].properties.center.split(',')[0]
@@ -393,25 +396,20 @@ class Flows_map
 			);
 		);
 
-	`		
-	Flows_map.prototype.function animate(){
-		this.counter = this.counter + 1
-		calc_points_new_position( this.points.features )
-		check_for_spawn( this.flows.features )
-		this.map.getSource('points').setData( this.points );
-		if (this.counter < this.end) {
-			requestAnimationFrame(this.animate) 
-		}
-	}
-	`			
+	flush_points_data: ->
+		@map.getSource('points').setData( @points )
+
+
+	
 
 #####################################################################################################################################
 #####################################################################################################################################
 #####################################################################################################################################
+
 
 $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 
-	my_map = Flows_map( data, {
+	my_map = new Flows_map( data, {
 		center: [30.5, 49.0],
 		kdelta: 0.01,
 		kspawn: 200,
@@ -429,5 +427,17 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 		maxZoom: 3
 	});
 
-	my_map.animate();
+	`		
+	function animate(){
+		my_map.counter = my_map.counter + 1
+		my_map.calc_points_new_position()
+		my_map.check_for_spawn()
+		// my_map.flush_points_data()
+
+		if (my_map.counter < my_map.end) {
+			requestAnimationFrame(animate) 
+		}
+	}
+	`		
+	animate();
 );
