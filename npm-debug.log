@@ -1,0 +1,179 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', 'coffeescript' ]
+2 info using npm@2.15.1
+3 info using node@v0.10.46
+4 verbose install initial load of /home/fy/ror/pm2/package.json
+5 verbose readDependencies loading dependencies from /home/fy/ror/pm2/package.json
+6 silly cache add args [ 'coffeescript', null ]
+7 verbose cache add spec coffeescript
+8 silly cache add parsed spec { raw: 'coffeescript',
+8 silly cache add   scope: null,
+8 silly cache add   name: 'coffeescript',
+8 silly cache add   rawSpec: '',
+8 silly cache add   spec: 'latest',
+8 silly cache add   type: 'tag' }
+9 silly addNamed coffeescript@latest
+10 verbose addNamed "latest" is being treated as a dist-tag for coffeescript
+11 info addNameTag [ 'coffeescript', 'latest' ]
+12 silly mapToRegistry name coffeescript
+13 silly mapToRegistry using default registry
+14 silly mapToRegistry registry https://registry.npmjs.org/
+15 silly mapToRegistry data { raw: 'coffeescript',
+15 silly mapToRegistry   scope: null,
+15 silly mapToRegistry   name: 'coffeescript',
+15 silly mapToRegistry   rawSpec: '',
+15 silly mapToRegistry   spec: 'latest',
+15 silly mapToRegistry   type: 'tag' }
+16 silly mapToRegistry uri https://registry.npmjs.org/coffeescript
+17 verbose addNameTag registry:https://registry.npmjs.org/coffeescript not in flight; fetching
+18 verbose request uri https://registry.npmjs.org/coffeescript
+19 verbose request no auth needed
+20 info attempt registry request try #1 at 00:05:00
+21 verbose request id 7640a0408cf2ecd3
+22 http request GET https://registry.npmjs.org/coffeescript
+23 http 200 https://registry.npmjs.org/coffeescript
+24 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+24 verbose headers   etag: '"5NUPLG6Y5EF1A8UGY5M2G8ZDG"',
+24 verbose headers   'content-type': 'application/json',
+24 verbose headers   'content-encoding': 'gzip',
+24 verbose headers   'cache-control': 'max-age=300',
+24 verbose headers   'content-length': '591',
+24 verbose headers   'accept-ranges': 'bytes',
+24 verbose headers   date: 'Sat, 24 Sep 2016 21:05:00 GMT',
+24 verbose headers   via: '1.1 varnish',
+24 verbose headers   age: '0',
+24 verbose headers   connection: 'keep-alive',
+24 verbose headers   'x-served-by': 'cache-fra1250-FRA',
+24 verbose headers   'x-cache': 'MISS',
+24 verbose headers   'x-cache-hits': '0',
+24 verbose headers   'x-timer': 'S1474751100.533517,VS0,VE107',
+24 verbose headers   vary: 'Accept-Encoding' }
+25 silly get cb [ 200,
+25 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+25 silly get     etag: '"5NUPLG6Y5EF1A8UGY5M2G8ZDG"',
+25 silly get     'content-type': 'application/json',
+25 silly get     'content-encoding': 'gzip',
+25 silly get     'cache-control': 'max-age=300',
+25 silly get     'content-length': '591',
+25 silly get     'accept-ranges': 'bytes',
+25 silly get     date: 'Sat, 24 Sep 2016 21:05:00 GMT',
+25 silly get     via: '1.1 varnish',
+25 silly get     age: '0',
+25 silly get     connection: 'keep-alive',
+25 silly get     'x-served-by': 'cache-fra1250-FRA',
+25 silly get     'x-cache': 'MISS',
+25 silly get     'x-cache-hits': '0',
+25 silly get     'x-timer': 'S1474751100.533517,VS0,VE107',
+25 silly get     vary: 'Accept-Encoding' } ]
+26 verbose get saving coffeescript to /home/fy/.npm/registry.npmjs.org/coffeescript/.cache.json
+27 verbose correctMkdir /home/fy/.npm correctMkdir not in flight; initializing
+28 verbose makeDirectory /home/fy/.npm creation not in flight; initializing
+29 silly makeDirectory /home/fy/.npm uid: 1000 gid: 1000
+30 silly addNameTag next cb for coffeescript with tag latest
+31 silly addNamed coffeescript@99.999.99999
+32 verbose addNamed "99.999.99999" is a plain semver version for coffeescript
+33 warn deprecated coffeescript@99.999.99999: You misspelled 'coffee-script'
+34 silly mapToRegistry name coffeescript
+35 silly mapToRegistry using default registry
+36 silly mapToRegistry registry https://registry.npmjs.org/
+37 silly mapToRegistry data { raw: 'coffeescript',
+37 silly mapToRegistry   scope: null,
+37 silly mapToRegistry   name: 'coffeescript',
+37 silly mapToRegistry   rawSpec: '',
+37 silly mapToRegistry   spec: 'latest',
+37 silly mapToRegistry   type: 'tag' }
+38 silly mapToRegistry uri https://registry.npmjs.org/coffeescript
+39 verbose addRemoteTarball https://registry.npmjs.org/coffeescript/-/coffeescript-99.999.99999.tgz not in flight; adding
+40 verbose addRemoteTarball [ 'https://registry.npmjs.org/coffeescript/-/coffeescript-99.999.99999.tgz',
+40 verbose addRemoteTarball   '98f6a60410f827dcb06c067db5539c03c932ad75' ]
+41 info retry fetch attempt 1 at 00:05:00
+42 info attempt registry request try #1 at 00:05:00
+43 http fetch GET https://registry.npmjs.org/coffeescript/-/coffeescript-99.999.99999.tgz
+44 http fetch 200 https://registry.npmjs.org/coffeescript/-/coffeescript-99.999.99999.tgz
+45 silly fetchAndShaCheck shasum 98f6a60410f827dcb06c067db5539c03c932ad75
+46 verbose addTmpTarball /tmp/npm-13553-de95e8ef/registry.npmjs.org/coffeescript/-/coffeescript-99.999.99999.tgz not in flight; adding
+47 verbose addTmpTarball already have metadata; skipping unpack for coffeescript@99.999.99999
+48 verbose correctMkdir /home/fy/.npm correctMkdir not in flight; initializing
+49 silly cache afterAdd coffeescript@99.999.99999
+50 verbose afterAdd /home/fy/.npm/coffeescript/99.999.99999/package/package.json not in flight; writing
+51 verbose correctMkdir /home/fy/.npm correctMkdir not in flight; initializing
+52 verbose afterAdd /home/fy/.npm/coffeescript/99.999.99999/package/package.json written
+53 silly install resolved [ { name: 'coffeescript',
+53 silly install resolved     version: '99.999.99999',
+53 silly install resolved     scripts: { preinstall: 'node super-evil-script-omg-for-reals.js' },
+53 silly install resolved     _id: 'coffeescript@99.999.99999',
+53 silly install resolved     dist:
+53 silly install resolved      { shasum: '98f6a60410f827dcb06c067db5539c03c932ad75',
+53 silly install resolved        tarball: 'https://registry.npmjs.org/coffeescript/-/coffeescript-99.999.99999.tgz' },
+53 silly install resolved     _from: 'coffeescript@latest',
+53 silly install resolved     _npmVersion: '1.4.4',
+53 silly install resolved     _npmUser: { name: 'isaacs', email: 'i@izs.me' },
+53 silly install resolved     maintainers: [ [Object] ],
+53 silly install resolved     deprecated: 'You misspelled \'coffee-script\'',
+53 silly install resolved     directories: {},
+53 silly install resolved     _shasum: '98f6a60410f827dcb06c067db5539c03c932ad75',
+53 silly install resolved     _resolved: 'https://registry.npmjs.org/coffeescript/-/coffeescript-99.999.99999.tgz' } ]
+54 info install coffeescript@99.999.99999 into /home/fy/ror/pm2
+55 info installOne coffeescript@99.999.99999
+56 verbose installOne of coffeescript to /home/fy/ror/pm2 not in flight; installing
+57 verbose correctMkdir /home/fy/.npm/_locks correctMkdir not in flight; initializing
+58 verbose makeDirectory /home/fy/.npm/_locks creation not in flight; initializing
+59 silly makeDirectory /home/fy/.npm/_locks uid: 1000 gid: 1000
+60 verbose lock using /home/fy/.npm/_locks/coffeescript-e8af5fe057d37fc4.lock for /home/fy/ror/pm2/node_modules/coffeescript
+61 silly install write writing coffeescript 99.999.99999 to /home/fy/ror/pm2/node_modules/coffeescript
+62 verbose unbuild node_modules/coffeescript
+63 silly gentlyRm /home/fy/ror/pm2/node_modules/coffeescript is being purged from base /home/fy/ror/pm2
+64 verbose gentlyRm don't care about contents; nuking /home/fy/ror/pm2/node_modules/coffeescript
+65 verbose tar unpack /home/fy/.npm/coffeescript/99.999.99999/package.tgz
+66 verbose tar unpacking to /home/fy/ror/pm2/node_modules/coffeescript
+67 silly gentlyRm /home/fy/ror/pm2/node_modules/coffeescript is being purged
+68 verbose gentlyRm don't care about contents; nuking /home/fy/ror/pm2/node_modules/coffeescript
+69 silly gunzTarPerm modes [ '775', '664' ]
+70 silly gunzTarPerm extractEntry package.json
+71 silly gunzTarPerm modified mode [ 'package.json', 420, 436 ]
+72 silly gunzTarPerm extractEntry super-evil-script-omg-for-reals.js
+73 silly gunzTarPerm modified mode [ 'super-evil-script-omg-for-reals.js', 420, 436 ]
+74 verbose write writing to /home/fy/ror/pm2/node_modules/coffeescript/package.json
+75 info preinstall coffeescript@99.999.99999
+76 verbose unsafe-perm in lifecycle true
+77 info coffeescript@99.999.99999 Failed to exec preinstall script
+78 verbose unlock done using /home/fy/.npm/_locks/coffeescript-e8af5fe057d37fc4.lock for /home/fy/ror/pm2/node_modules/coffeescript
+79 verbose stack Error: coffeescript@99.999.99999 preinstall: `node super-evil-script-omg-for-reals.js`
+79 verbose stack Exit status 1
+79 verbose stack     at EventEmitter.<anonymous> (/usr/lib/node_modules/npm/lib/utils/lifecycle.js:217:16)
+79 verbose stack     at EventEmitter.emit (events.js:98:17)
+79 verbose stack     at ChildProcess.<anonymous> (/usr/lib/node_modules/npm/lib/utils/spawn.js:24:14)
+79 verbose stack     at ChildProcess.emit (events.js:98:17)
+79 verbose stack     at maybeClose (child_process.js:766:16)
+79 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:833:5)
+80 verbose pkgid coffeescript@99.999.99999
+81 verbose cwd /home/fy/ror/pm2
+82 error Linux 4.4.16-desktop-1.mga5
+83 error argv "/usr/bin/node" "/usr/bin/npm" "install" "coffeescript"
+84 error node v0.10.46
+85 error npm  v2.15.1
+86 error code ELIFECYCLE
+87 error coffeescript@99.999.99999 preinstall: `node super-evil-script-omg-for-reals.js`
+87 error Exit status 1
+88 error Failed at the coffeescript@99.999.99999 preinstall script 'node super-evil-script-omg-for-reals.js'.
+88 error This is most likely a problem with the coffeescript package,
+88 error not with npm itself.
+88 error Tell the author that this fails on your system:
+88 error     node super-evil-script-omg-for-reals.js
+88 error You can get information on how to open an issue for this project with:
+88 error     npm bugs coffeescript
+88 error Or if that isn't available, you can get their info via:
+88 error
+88 error     npm owner ls coffeescript
+88 error There is likely additional logging output above.
+89 verbose exit [ 1, true ]
+90 verbose unbuild node_modules/coffeescript
+91 info preuninstall coffeescript@99.999.99999
+92 info uninstall coffeescript@99.999.99999
+93 verbose unbuild rmStuff coffeescript@99.999.99999 from /home/fy/ror/pm2/node_modules
+94 info postuninstall coffeescript@99.999.99999
+95 silly gentlyRm /home/fy/ror/pm2/node_modules/coffeescript is being purged from base /home/fy/ror/pm2
+96 verbose gentlyRm don't care about contents; nuking /home/fy/ror/pm2/node_modules/coffeescript
+97 silly vacuum-fs purging /home/fy/ror/pm2/node_modules/coffeescript
+98 silly vacuum-fs removing /home/fy/ror/pm2/node_modules
+99 silly vacuum-fs finished vacuuming up to /home/fy/ror/pm2

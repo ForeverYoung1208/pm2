@@ -17,21 +17,27 @@ class Flows_map
 		# spread of flow values from 0 to normal_spread
 		@normal_spread = init_data.normal_spread #20
 
-	flows = 
+	#animatre counter
+	@counter = 0;
+	
+	#animatre counter end
+	@end = 5000;
+
+	@flows = 
 		"type": "FeatureCollection",
 		"features": []
-	points =
+	@points =
 		"type": "FeatureCollection",
 		"features": []		
-	dots =
+	@dots =
 		"type": "FeatureCollection",
 		"features": []
 
-	processdata: () ->
+	preprocessdata: () ->
 		max_value = 0
 		max_dot_value = 0
 
-		# create points and flows for every flow_data
+		# create points, dots and flows for every flow_data
 		for flow_data in @flows_data
 
 			# prepare origins and destinations using value sign
@@ -81,7 +87,7 @@ class Flows_map
 			}
 
 			#create dots (ends of lines)
-			dots.features.push {
+			@dots.features.push {
 				"type": "Feature",
 				"geometry": {
 					"type": "Point",
@@ -95,7 +101,7 @@ class Flows_map
 				}
 			}
 
-			dots.features.push {
+			@dots.features.push {
 				"type": "Feature",
 				"geometry": {
 					"type": "Point",
@@ -109,78 +115,57 @@ class Flows_map
 				}
 			}
 
+		# normalize flows
+		for point_f in @points.features
+			point_f.on_flow.normalized_value = Math.abs(point_f.on_flow.value / max_value) * normal_spread
+			point_f.on_flow.steps_to_spawn = kspawn * 1 / point_f.on_flow.normalized_value 
 
 
-
-
-
-
-
-
-
-
-$.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
-	flows_data = data
-
-
-
-
-
-	# normalize flows
-	for point_f in points.features
-		point_f.on_flow.normalized_value = Math.abs(point_f.on_flow.value / max_value) * normal_spread
-		point_f.on_flow.steps_to_spawn = kspawn * 1 / point_f.on_flow.normalized_value 
-
-
-	#sum and remove identical dots, find absolute maximum dot value
-	`
-	var i = dots.features.length
-	while (i--){
-		if ( Math.abs(dots.features[i].dot_value) > Math.abs(max_dot_value) ) { max_dot_value = Math.abs(dots.features[i].dot_value) }   
-		for (j = 0; j < i; j++) {
-			if ((dots.features[j].geometry.coordinates[0] == dots.features[i].geometry.coordinates[0])&&(dots.features[j].geometry.coordinates[1] == dots.features[i].geometry.coordinates[1]))	{
-				dots.features[j].dot_value += dots.features[i].dot_value;
-				dots.features.splice( i, 1);
-				break;
+		#sum and remove identical dots, find absolute maximum dot value
+		`
+		var i = this.dots.features.length
+		while (i--){
+			if ( Math.abs(this.dots.features[i].dot_value) > Math.abs(max_dot_value) ) { max_dot_value = Math.abs(this.dots.features[i].dot_value) }   
+			for (j = 0; j < i; j++) {
+				if ((this.dots.features[j].geometry.coordinates[0] == this.dots.features[i].geometry.coordinates[0])&&(this.dots.features[j].geometry.coordinates[1] == this.dots.features[i].geometry.coordinates[1]))	{
+					this.dots.features[j].dot_value += this.dots.features[i].dot_value;
+					this.dots.features.splice( i, 1);
+					break;
+				}
 			}
 		}
-	}
 
-	`
+		`
+		# set dot size in percent according to normalized dot_value
+		for dot_f in dots.features
+			dot_f.properties.message = ' ' + dot_f.dot_value + ' грн.'
 
-	# set dot size in percent according to normalized dot_value
+			if dot_f.dot_value <= 0
+				dot_f.properties.iconColor = 1
 
-	for dot_f in dots.features
-		dot_f.properties.message = ' ' + dot_f.dot_value + ' грн.'
-
-		if dot_f.dot_value <= 0
-			dot_f.properties.iconColor = 1
-
-		switch true
-			when Math.abs( dot_f.dot_value / max_dot_value ) < 0.1
-				dot_f.properties.iconSize = 0
-			when Math.abs( dot_f.dot_value / max_dot_value ) < 0.2
-				dot_f.properties.iconSize = 10
-			when Math.abs( dot_f.dot_value / max_dot_value ) < 0.3
-				dot_f.properties.iconSize = 20
-			when Math.abs( dot_f.dot_value / max_dot_value ) < 0.4
-				dot_f.properties.iconSize = 30
-			when Math.abs( dot_f.dot_value / max_dot_value ) < 0.5
-				dot_f.properties.iconSize = 40
-			when Math.abs( dot_f.dot_value / max_dot_value ) < 0.6
-				dot_f.properties.iconSize = 50
-			when Math.abs( dot_f.dot_value / max_dot_value ) < 0.7
-				dot_f.properties.iconSize = 60
-			when Math.abs( dot_f.dot_value / max_dot_value ) < 0.8
-				dot_f.properties.iconSize = 70
-			when Math.abs( dot_f.dot_value / max_dot_value ) < 0.9
-				dot_f.properties.iconSize = 80
-			when Math.abs( dot_f.dot_value / max_dot_value ) < 1
-				dot_f.properties.iconSize = 90
-			when Math.abs( dot_f.dot_value / max_dot_value ) == 1
-				dot_f.properties.iconSize = 100
-
-
+			switch true
+				when Math.abs( dot_f.dot_value / max_dot_value ) < 0.1
+					dot_f.properties.iconSize = 0
+				when Math.abs( dot_f.dot_value / max_dot_value ) < 0.2
+					dot_f.properties.iconSize = 10
+				when Math.abs( dot_f.dot_value / max_dot_value ) < 0.3
+					dot_f.properties.iconSize = 20
+				when Math.abs( dot_f.dot_value / max_dot_value ) < 0.4
+					dot_f.properties.iconSize = 30
+				when Math.abs( dot_f.dot_value / max_dot_value ) < 0.5
+					dot_f.properties.iconSize = 40
+				when Math.abs( dot_f.dot_value / max_dot_value ) < 0.6
+					dot_f.properties.iconSize = 50
+				when Math.abs( dot_f.dot_value / max_dot_value ) < 0.7
+					dot_f.properties.iconSize = 60
+				when Math.abs( dot_f.dot_value / max_dot_value ) < 0.8
+					dot_f.properties.iconSize = 70
+				when Math.abs( dot_f.dot_value / max_dot_value ) < 0.9
+					dot_f.properties.iconSize = 80
+				when Math.abs( dot_f.dot_value / max_dot_value ) < 1
+					dot_f.properties.iconSize = 90
+				when Math.abs( dot_f.dot_value / max_dot_value ) == 1
+					dot_f.properties.iconSize = 100
 
 	# calc new positions for points
 	`
@@ -197,9 +182,7 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 		}
 	}
 	`
-
 	# function to check the necessity on spawning of new points
-
 	check_for_spawn = (flows_f) ->
 		for flow_f in flows_f
 			if flow_f.step_from_spawn >= flow_f.steps_to_spawn
@@ -218,7 +201,7 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 				d_y = kdelta*( d[1] - o[1] )
 
 
-				points.features.push {
+				@points.features.push {
 					"type": "Feature",
 					"geometry": {
 						"type": "Point",
@@ -237,199 +220,214 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 
 
 
-				
+	setupmap: (map_params) ->	
+		mapboxgl.accessToken = 'pk.eyJ1IjoiZm9yZXZlcnlvdW5nMTIwOCIsImEiOiJjaXJodnd1bHYwMDRjajFtNWU5aDZrMDk1In0.4Q1TtVizWiiiu6oUPL2mhw'
+		@map = new mapboxgl.Map({
+			#// container id
+			container: map_params.containerid,  #'map',
+			#// style location
+			style: 'mapbox://styles/mapbox/streets-v9'	    
+			#// starting position
+			center: map_params.center #  center,
+			zoom: map_params.zoom  #5.5,
+			maxZoom: map_params.maxZoom  #5.5,
+			minZoom: map_params.minZoom  #3
+		});
 
-	mapboxgl.accessToken = 'pk.eyJ1IjoiZm9yZXZlcnlvdW5nMTIwOCIsImEiOiJjaXJodnd1bHYwMDRjajFtNWU5aDZrMDk1In0.4Q1TtVizWiiiu6oUPL2mhw'
-	map = new mapboxgl.Map({
-		#// container id
-		container: 'map',
-		#// style location
-		style: 'mapbox://styles/mapbox/streets-v9'	    
-		#// starting position
-		center: center,
-		zoom: 5.5,
-		maxZoom: 5.5,
-		minZoom: 3
-	})
+		@map.on('load', ->
 
-	map.on('load', ->
+	#=====================================================================               SOURCES			
 
-#=====================================================================               SOURCES			
+			@map.addSource('areas', {
+					"type": "geojson",
+					"data": "/areas.json"
+			});
 
-		map.addSource('areas', {
+			@map.addSource('routes', {
+					"type": "geojson",
+					"data": flows
+			});
+			
+			@map.addSource('points', {
 				"type": "geojson",
-				"data": "/areas.json"
-		});
+				"data": points,
+				"cluster": false
+			});
 
-		map.addSource('routes', {
+			@map.addSource('dots', {
 				"type": "geojson",
-				"data": flows
-		});
-		
-		map.addSource('points', {
-			"type": "geojson",
-			"data": points,
-			"cluster": false
-		});
+				"data": dots,
+				"cluster": false
+			});
 
-		map.addSource('dots', {
-			"type": "geojson",
-			"data": dots,
-			"cluster": false
-		});
+			@map.addSource('labels', {
+				"type": "geojson",
+				"data": dots,
+				"cluster": false
+			});
+	#=========================================================================     LAYERS
+			@map.addLayer({
+				"id": "areas_fill_layer",
+				"type": "fill",			
+				"source": "areas",
+				"layout": {},
+				"paint": {
+					"fill-color": "#627BC1",
+					"fill-opacity": 0.2
+				}
+			});
 
-		map.addSource('labels', {
-			"type": "geojson",
-			"data": dots,
-			"cluster": false
-		});
+			@map.addLayer({
+				"id": "areas_hovered_layer",
+				"type": "fill",			
+				"source": "areas",
+				"layout": {},
+				"paint": {
+					"fill-color": "#728Bd1",
+					"fill-opacity": 0.7
+				},
+				"filter": ["==", "id", ""]			
+			});
 
+			@map.addLayer({
+				"id": "areas_borders_layer",
+				"type": "line",			
+				"source": "areas",
+				"layout": {},
+				"paint": {
+					"line-color": "#627BC1",
+					"line-width": 2
+				}
+			});
 
-#=========================================================================     LAYERS
-
-		map.addLayer({
-			"id": "areas_fill_layer",
-			"type": "fill",			
-			"source": "areas",
-			"layout": {},
-			"paint": {
-				"fill-color": "#627BC1",
-				"fill-opacity": 0.2
-			}
-		});
-
-		map.addLayer({
-			"id": "areas_hovered_layer",
-			"type": "fill",			
-			"source": "areas",
-			"layout": {},
-			"paint": {
-				"fill-color": "#728Bd1",
-				"fill-opacity": 0.7
-			},
-			"filter": ["==", "id", ""]			
-		});
-
-		map.addLayer({
-			"id": "areas_borders_layer",
-			"type": "line",			
-			"source": "areas",
-			"layout": {},
-			"paint": {
-				"line-color": "#627BC1",
-				"line-width": 2
-			}
-		});
-
-		map.addLayer({
-			"id": "routes_layer",
-			"source": "routes",
-			"type": "line",
-			"paint": {
-				"line-width": 2,
-				"line-color": "#007cbf"
-			}
-		});
+			@map.addLayer({
+				"id": "routes_layer",
+				"source": "routes",
+				"type": "line",
+				"paint": {
+					"line-width": 2,
+					"line-color": "#007cbf"
+				}
+			});
 
 
-		map.addLayer({
-			"id": "points_layer",
-			"source": "points",
-			"type": "symbol",
-			"layout": {
-				"icon-image": "bank-11",
-				"icon-allow-overlap": true					
-			}
-		});
+			@map.addLayer({
+				"id": "points_layer",
+				"source": "points",
+				"type": "symbol",
+				"layout": {
+					"icon-image": "bank-11",
+					"icon-allow-overlap": true					
+				}
+			});
 
-		map.addLayer({
-			"id": "dots_layer",
-			"source": "dots",
-			"type": "circle",
-			"paint": {
-					"circle-radius": {
-						"property": "iconSize",
-						"stops":[
-							[0,  6],
-							[10, 10],
-							[20, 12],
-							[30, 14],
-							[40, 16],
-							[50, 18],
-							[60, 20],
-							[70, 22],
-							[80, 24],
-							[90, 26],
-							[100, 28]
-						]
-					},
-					"circle-color": {
-						"property": "iconColor",
-						"stops":[
-							[0, "#8888ff"],
-							[1, "#00ff00"]
-						]
-					}
-			}
-		});
-
-		map.addLayer({
-			"id": "label_layer",
-			"source": "dots",
-			"type": "symbol",
-			"layout": {
-				"icon-allow-overlap": true,
-				"text-field": "{message}",
-				"text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-				"text-size": 11,
-				"text-letter-spacing": 0.05					
-			}
-		});
-
-
-		`
-		map.on("mousemove", function(e) {
-			var features = map.queryRenderedFeatures(e.point, { layers: ["areas_fill_layer"] });
-			if (features.length) {
-					map.setFilter("areas_hovered_layer", ["==", "id", features[0].properties.id]);
-			} else {
-					map.setFilter("areas_hovered_layer", ["==", "id", ""]);
-			}
-		});
-
-		map.on("mouseout", function() {
-				map.setFilter("route-hover", ["==", "id", ""]);
-		});
-		`
+			@map.addLayer({
+				"id": "dots_layer",
+				"source": "dots",
+				"type": "circle",
+				"paint": {
+						"circle-radius": {
+							"property": "iconSize",
+							"stops":[
+								[0,  6],
+								[10, 10],
+								[20, 12],
+								[30, 14],
+								[40, 16],
+								[50, 18],
+								[60, 20],
+								[70, 22],
+								[80, 24],
+								[90, 26],
+								[100, 28]
+							]
+						},
+						"circle-color": {
+							"property": "iconColor",
+							"stops":[
+								[0, "#8888ff"],
+								[1, "#00ff00"]
+							]
+						}
+				}
+			});
 	
+			@map.addLayer({
+				"id": "label_layer",
+				"source": "dots",
+				"type": "symbol",
+				"layout": {
+					"icon-allow-overlap": true,
+					"text-field": "{message}",
+					"text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+					"text-size": 11,
+					"text-letter-spacing": 0.05					
+				}
+			});
 
-		map.on('click', (e) ->
-			features = map.queryRenderedFeatures(e.point, { layers: ['areas_fill_layer'] });
-			if features.length
-				y = features[0].properties.center.split(',')[0]
-				x = features[0].properties.center.split(',')[1]
+			`
+			this.map.on("mousemove", function(e) {
+				var features = this.map.queryRenderedFeatures(e.point, { layers: ["areas_fill_layer"] });
+				if (features.length) {
+						this.map.setFilter("areas_hovered_layer", ["==", "id", features[0].properties.id]);
+				} else {
+						this.map.setFilter("areas_hovered_layer", ["==", "id", ""]);
+				}
+			});
 
-				map.flyTo({
-					center: [x,y]
-				});
+			this.map.on("mouseout", function() {
+					this.map.setFilter("route-hover", ["==", "id", ""]);
+			});
+			`
+		
+
+			@map.on('click', (e) ->
+				features = @map.queryRenderedFeatures(e.point, { layers: ['areas_fill_layer'] });
+				if features.length
+					y = features[0].properties.center.split(',')[0]
+					x = features[0].properties.center.split(',')[1]
+
+					@map.flyTo({
+						center: [x,y]
+					});
+			);
 		);
 
-
-		`		
-		function animate(){
-			counter = counter + 1
-			calc_points_new_position( points.features )
-			check_for_spawn( flows.features )
-			map.getSource('points').setData( points );
-			if (counter < end) {
-				requestAnimationFrame(animate) 
-			}
+	`		
+	Flows_map.prototype.function animate(){
+		this.counter = this.counter + 1
+		calc_points_new_position( this.points.features )
+		check_for_spawn( this.flows.features )
+		this.map.getSource('points').setData( this.points );
+		if (this.counter < this.end) {
+			requestAnimationFrame(this.animate) 
 		}
-		`			
+	}
+	`			
 
+#####################################################################################################################################
+#####################################################################################################################################
+#####################################################################################################################################
 
-		counter = 0;
-		end = 5000;
-		animate();
-	);
+$.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
+
+	my_map = Flows_map( data, {
+		center: [30.5, 49.0],
+		kdelta: 0.01,
+		kspawn: 200,
+		normal_spread: 20
+	});
+
+	my_map.preprocessdata;
+
+	my_map.setupmap({
+		#// container id
+		containerid: 'map',
+		center: [30.5, 49.0],
+		zoom: 5.5,
+		minZoom: 5.5,
+		maxZoom: 3
+	});
+
+	my_map.animate();
 );
