@@ -20,6 +20,7 @@ class Flows_map
 		#animatre counter
 		@counter = 0;
 		
+
 		#animatre counter end
 		@end = 5000;
 
@@ -53,8 +54,8 @@ class Flows_map
 					d = 0
 
 			# calculate d_x and d_y
-			d_x = kdelta*( d[0] - o[0] )
-			d_y = kdelta*( d[1] - o[1] )
+			d_x = @kdelta*( d[0] - o[0] )
+			d_y = @kdelta*( d[1] - o[1] )
 
 			#create flow (line)
 			count_flows = @flows.features.push {
@@ -78,7 +79,7 @@ class Flows_map
 					"type": "Point",
 					coordinates: o,
 				}
-				on_flow: flows.features[count_flows-1],
+				on_flow: @flows.features[count_flows-1],
 				origin: o,
 				destination: d,
 				delta_x: d_x,
@@ -117,8 +118,8 @@ class Flows_map
 
 		# normalize flows
 		for point_f in @points.features
-			point_f.on_flow.normalized_value = Math.abs(point_f.on_flow.value / max_value) * normal_spread
-			point_f.on_flow.steps_to_spawn = kspawn * 1 / point_f.on_flow.normalized_value 
+			point_f.on_flow.normalized_value = Math.abs(point_f.on_flow.value / max_value) * @normal_spread
+			point_f.on_flow.steps_to_spawn = @kspawn * 1 / point_f.on_flow.normalized_value 
 
 
 		#sum and remove identical dots, find absolute maximum dot value
@@ -137,7 +138,7 @@ class Flows_map
 
 		`
 		# set dot size in percent according to normalized dot_value
-		for dot_f in dots.features
+		for dot_f in @dots.features
 			dot_f.properties.message = ' ' + dot_f.dot_value + ' грн.'
 
 			if dot_f.dot_value <= 0
@@ -170,10 +171,10 @@ class Flows_map
 	# calc new positions for points
 	`
 	Flows_map.prototype.calc_points_new_position = function() {
-		var points_f = this.points
+		points_f = this.points.features
 		var i = points_f.length
 		while (i--){
-			if (points_f[i].step <= ankdelta) {
+			if (points_f[i].step <= this.ankdelta) {
 					points_f[i].geometry.coordinates[0] += points_f[i].delta_x;
 					points_f[i].geometry.coordinates[1] += points_f[i].delta_y;
 					points_f[i].step += 1;
@@ -200,8 +201,8 @@ class Flows_map
 						o = 0
 						d = 0
 
-				d_x = kdelta*( d[0] - o[0] )
-				d_y = kdelta*( d[1] - o[1] )
+				d_x = @kdelta*( d[0] - o[0] )
+				d_y = @kdelta*( d[1] - o[1] )
 
 
 				@points.features.push {
@@ -237,6 +238,10 @@ class Flows_map
 			minZoom: map_params.minZoom  #3
 		});
 
+		flows = @flows
+		points = @points
+		dots = @dots
+
 		@map.on('load', ->
 
 	#=====================================================================               SOURCES			
@@ -248,24 +253,24 @@ class Flows_map
 
 			@addSource('routes', {
 					"type": "geojson",
-					"data": @flows
+					"data": flows
 			});
 			
 			@addSource('points', {
 				"type": "geojson",
-				"data": @points,
+				"data": points,
 				"cluster": false
 			});
 
 			@addSource('dots', {
 				"type": "geojson",
-				"data": @dots,
+				"data": dots,
 				"cluster": false
 			});
 
 			@addSource('labels', {
 				"type": "geojson",
-				"data": @dots,
+				"data": dots,
 				"cluster": false
 			});
 	#=========================================================================     LAYERS
@@ -370,16 +375,16 @@ class Flows_map
 
 			`
 			this.on("mousemove", function(e) {
-				var features = this.map.queryRenderedFeatures(e.point, { layers: ["areas_fill_layer"] });
+				var features = this.queryRenderedFeatures(e.point, { layers: ["areas_fill_layer"] });
 				if (features.length) {
-						this.map.setFilter("areas_hovered_layer", ["==", "id", features[0].properties.id]);
+						this.setFilter("areas_hovered_layer", ["==", "id", features[0].properties.id]);
 				} else {
-						this.map.setFilter("areas_hovered_layer", ["==", "id", ""]);
+						this.setFilter("areas_hovered_layer", ["==", "id", ""]);
 				}
 			});
 
 			this.on("mouseout", function() {
-					this.map.setFilter("route-hover", ["==", "id", ""]);
+					this.setFilter("route-hover", ["==", "id", ""]);
 			});
 			`
 		
@@ -396,8 +401,11 @@ class Flows_map
 			);
 		);
 
+#### TODO
 	flush_points_data: ->
-		@map.getSource('points').setData( @points )
+		if @map && @map.loaded
+			@map.getSource('points').setData( @points )
+		return true
 
 
 	
@@ -416,15 +424,15 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 		normal_spread: 20
 	});
 
-	my_map.preprocessdata;
+	my_map.preprocessdata();
 
 	my_map.setupmap({
 		#// container id
 		containerid: 'map',
 		center: [30.5, 49.0],
 		zoom: 5.5,
-		minZoom: 5.5,
-		maxZoom: 3
+		minZoom: 3,
+		maxZoom: 5.5
 	});
 
 	`		
@@ -432,7 +440,7 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 		my_map.counter = my_map.counter + 1
 		my_map.calc_points_new_position()
 		my_map.check_for_spawn()
-		// my_map.flush_points_data()
+		my_map.flush_points_data()
 
 		if (my_map.counter < my_map.end) {
 			requestAnimationFrame(animate) 
@@ -440,4 +448,5 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 	}
 	`		
 	animate();
+
 );
