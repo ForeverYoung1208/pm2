@@ -387,7 +387,6 @@ class Flows_map
 					this.setFilter("route-hover", ["==", "id", ""]);
 			});
 			`
-		
 
 			@on('click', (e) ->
 				features = @map.queryRenderedFeatures(e.point, { layers: ['areas_fill_layer'] });
@@ -403,9 +402,7 @@ class Flows_map
 
 #### TODO
 	flush_points_data: ->
-		if @map && @map.loaded
-			@map.getSource('points').setData( @points )
-		return true
+		@map.getSource('points').setData(@points)
 
 
 	
