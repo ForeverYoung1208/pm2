@@ -3,7 +3,7 @@ class Flows_map
 		# //Kyiv
 		# 50°27′N 	30°31′E
 		# center = [30.445, 50.5166]
-		@center = init_data.center #[30.5, 49.0]
+		#@center = init_data.center #[30.5, 49.0]
 
 		# 1/(how many steps from origin to destination)
 		# kdelta = 0.005  500 steps(frames) from origin to destination
@@ -19,10 +19,11 @@ class Flows_map
 
 		#animatre counter
 		@counter = 0;
-		
 
 		#animatre counter end
-		@end = 5000;
+		@end = 50000;
+
+		@areas_path = init_data.areas_path
 
 		@flows = 
 			"type": "FeatureCollection",
@@ -188,7 +189,7 @@ class Flows_map
 	# function to check the necessity on spawning of new points
 
 	check_for_spawn: () ->
-		for flow_f in @flows
+		for flow_f in @flows.features
 			if flow_f.step_from_spawn >= flow_f.steps_to_spawn
 				switch true
 					when ( +flow_f.value > 0 )
@@ -241,6 +242,7 @@ class Flows_map
 		flows = @flows
 		points = @points
 		dots = @dots
+		areas_path = @areas_path
 
 		@map.on('load', ->
 
@@ -248,7 +250,7 @@ class Flows_map
 
 			@addSource('areas', {
 					"type": "geojson",
-					"data": "/areas.json"
+					"data": areas_path	#"/areas.json"
 			});
 
 			@addSource('routes', {
@@ -416,10 +418,24 @@ class Flows_map
 $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 
 	my_map = new Flows_map( data, {
+
+		# //Kyiv
+		# 50°27′N 	30°31′E
+		# center = [30.445, 50.5166]
 		center: [30.5, 49.0],
-		kdelta: 0.01,
-		kspawn: 200,
-		normal_spread: 20
+
+		# 1/(how many steps from origin to destination)
+		# kdelta = 0.005  500 steps(frames) from origin to destination
+		kdelta: 0.002,
+
+		# 1/(how often points will spawm) ( kspawn = 500  will spawm point every 500 frame for flow value = 1) 
+		kspawn: 800,
+
+		# spread of flow values from 0 to normal_spread (20)
+		normal_spread: 20,
+
+		areas_path: "/areas.json"
+
 	});
 
 	my_map.preprocessdata();
@@ -445,6 +461,8 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 		}
 	}
 	`		
-	animate();
+	my_map.map.on('load', ->
+		animate();
+	)
 
 );
