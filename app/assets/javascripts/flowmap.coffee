@@ -387,14 +387,14 @@ class Flows_map
 					this.setFilter("route-hover", ["==", "id", ""]);
 			});
 			`
-
+			m = this
 			@on('click', (e) ->
-				features = @map.queryRenderedFeatures(e.point, { layers: ['areas_fill_layer'] });
+				features = m.queryRenderedFeatures(e.point, { layers: ['areas_fill_layer'] });
 				if features.length
 					y = features[0].properties.center.split(',')[0]
 					x = features[0].properties.center.split(',')[1]
 
-					@map.flyTo({
+					m.flyTo({
 						center: [x,y]
 					});
 			);
@@ -402,7 +402,8 @@ class Flows_map
 
 #### TODO
 	flush_points_data: ->
-		@map.getSource('points').setData(@points)
+		if @map.loaded()
+			@map.getSource('points').setData(@points)
 
 
 	
