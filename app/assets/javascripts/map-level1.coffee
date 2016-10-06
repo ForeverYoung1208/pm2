@@ -40,7 +40,9 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 		animate();
 	)
 
-	window.addEventListener('change_level', (e) -> 
+
+
+	my_map1.map.on('change_level', (e) ->
 		alert(e.detail.level + ' ' + e.detail.area_id )
 	)
 
