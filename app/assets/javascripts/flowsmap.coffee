@@ -1,5 +1,5 @@
 class window.Flows_map
-	constructor: (@flows_data, init_data) ->
+	constructor: (@flows_data, init_data, map_params) ->
 		# //Kyiv
 		# 50°27′N 	30°31′E
 		# center = [30.445, 50.5166]
@@ -34,6 +34,12 @@ class window.Flows_map
 		@dots =
 			"type": "FeatureCollection",
 			"features": []
+
+		@next_zoom = init_data.next_zoom
+
+		@level = init_data.level
+
+		@setupmap( map_params )
 
 
 	
@@ -198,6 +204,7 @@ class window.Flows_map
 		points = @points
 		dots = @dots
 		areas_path = @areas_path
+		my_m = this
 
 		@map.on('load', ->
 
@@ -352,8 +359,18 @@ class window.Flows_map
 					x = features[0].properties.center.split(',')[1]
 
 					m.flyTo({
-						center: [x,y]
+						center: [x,y],
+						zoom: my_m.next_zoom
 					});
+
+					event = new CustomEvent('change_level', {
+						'detail': {
+							'level': my_m.level + 1,
+							'area_id': features[0].properties.title
+							}
+					});
+
+					window.dispatchEvent(event);
 
 			);
 		);
@@ -366,7 +383,7 @@ class window.Flows_map
 	# calc new positions for points
 	`
 	Flows_map.prototype.calc_points_new_position = function() {
-		points_f = this.points.features
+		var points_f = this.points.features
 		var i = points_f.length
 		while (i--){
 			if (points_f[i].step <= this.ankdelta) {
@@ -428,3 +445,11 @@ class window.Flows_map
 
 	flush_points_data: ->
 		@map.getSource('points').setData(@points)
+
+	do_frame: ->
+		@counter += 1
+		@calc_points_new_position()
+		@check_for_spawn()
+		@flush_points_data()
+		return @counter < @end
+

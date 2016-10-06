@@ -1,10 +1,8 @@
 $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 
 	my_map1 = new Flows_map( data, {
-		# //Kyiv
-		# 50°27′N 	30°31′E
-		# center = [30.445, 50.5166]
-		center: [30.5, 49.0],
+		# Properties needed by my animation envelope of mapbox
+
 		# 1/(how many steps from origin to destination)
 		# kdelta = 0.005  500 steps(frames) from origin to destination
 		kdelta: 0.01,
@@ -12,26 +10,28 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 		kspawn: 200,
 		# spread of flow values from 0 to normal_spread (20)
 		normal_spread: 20,
-		areas_path: "/areas.json"
-	});
+		areas_path: "/areas.json",
+		level: 1,
+		next_zoom: 7,
+	
+	},{
+		# Properties needed by mapbox 
 
-	my_map1.setupmap({
-		#// container id
 		containerid: 'map',
+
+		# //Kyiv
+		# 50°27′N 	30°31′E
+		# center = [30.445, 50.5166]
 		center: [30.5, 49.0],
+
 		zoom: 5.5,
 		minZoom: 3,
-		maxZoom: 5.5
+		maxZoom: 7		
 	});
 
 	`		
 	function animate(){
-		my_map1.counter = my_map1.counter + 1
-		my_map1.calc_points_new_position()
-		my_map1.check_for_spawn()
-		my_map1.flush_points_data()
-
-		if (my_map1.counter < my_map1.end) {
+		if ( my_map1.do_frame() ) {
 			requestAnimationFrame(animate) 
 		}
 	}
@@ -40,8 +40,8 @@ $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 		animate();
 	)
 
-	my_map1.map.on('click', ->
-		alert('click')
+	window.addEventListener('change_level', (e) -> 
+		alert(e.detail.level + ' ' + e.detail.area_id )
 	)
 
 );
