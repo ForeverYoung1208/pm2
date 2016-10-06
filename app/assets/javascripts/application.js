@@ -14,5 +14,6 @@
 //= require jquery_ujs
 // NOT require turbolinks
 // NOT require_tree .
-// NOT require map-areas
-// = require flowmap
+//= require flowsmap
+//= require map-level1
+
