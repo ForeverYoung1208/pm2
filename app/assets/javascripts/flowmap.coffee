@@ -35,10 +35,11 @@ class Flows_map
 			"type": "FeatureCollection",
 			"features": []
 
-	preprocessdata: () ->
+	setupmap: ( map_params ) ->
 		max_value = 0
 		max_dot_value = 0
 
+		# preprocess data: 
 		# create points, dots and flows for every flow_data
 		for flow_data in @flows_data
 
@@ -169,63 +170,7 @@ class Flows_map
 				when Math.abs( dot_f.dot_value / max_dot_value ) == 1
 					dot_f.properties.iconSize = 100
 
-	# calc new positions for points
-	`
-	Flows_map.prototype.calc_points_new_position = function() {
-		points_f = this.points.features
-		var i = points_f.length
-		while (i--){
-			if (points_f[i].step <= this.ankdelta) {
-					points_f[i].geometry.coordinates[0] += points_f[i].delta_x;
-					points_f[i].geometry.coordinates[1] += points_f[i].delta_y;
-					points_f[i].step += 1;
-				} else {
-					points_f.splice( i, 1);
-				}
-		}
-	}
-	`
-
-	# function to check the necessity on spawning of new points
-
-	check_for_spawn: () ->
-		for flow_f in @flows.features
-			if flow_f.step_from_spawn >= flow_f.steps_to_spawn
-				switch true
-					when ( +flow_f.value > 0 )
-						o = flow_f.geometry.coordinates[0].slice(0)
-						d = flow_f.geometry.coordinates[1].slice(0)
-					when ( +flow_f.value < 0 )
-						o = flow_f.geometry.coordinates[1].slice(0)
-						d = flow_f.geometry.coordinates[0].slice(0)
-					else
-						o = 0
-						d = 0
-
-				d_x = @kdelta*( d[0] - o[0] )
-				d_y = @kdelta*( d[1] - o[1] )
-
-
-				@points.features.push {
-					"type": "Feature",
-					"geometry": {
-						"type": "Point",
-						coordinates: o,
-					}
-					on_flow: flow_f,
-					origin: o,
-					destination: d,
-					delta_x: d_x,
-					delta_y: d_y,
-					step: 0,
-				}
-				flow_f.step_from_spawn = 0
-			else
-				flow_f.step_from_spawn += 1
-
-
-
-	setupmap: (map_params) ->	
+	# setup map
 		mapboxgl.accessToken = 'pk.eyJ1IjoiZm9yZXZlcnlvdW5nMTIwOCIsImEiOiJjaXJodnd1bHYwMDRjajFtNWU5aDZrMDk1In0.4Q1TtVizWiiiu6oUPL2mhw'
 		@map = new mapboxgl.Map({
 			#// container id
@@ -361,7 +306,7 @@ class Flows_map
 						}
 				}
 			});
-	
+
 			@addLayer({
 				"id": "label_layer",
 				"source": "dots",
@@ -402,10 +347,67 @@ class Flows_map
 			);
 		);
 
-#### TODO
+
+
+	# calc new positions for points
+	`
+	Flows_map.prototype.calc_points_new_position = function() {
+		points_f = this.points.features
+		var i = points_f.length
+		while (i--){
+			if (points_f[i].step <= this.ankdelta) {
+					points_f[i].geometry.coordinates[0] += points_f[i].delta_x;
+					points_f[i].geometry.coordinates[1] += points_f[i].delta_y;
+					points_f[i].step += 1;
+				} else {
+					points_f.splice( i, 1);
+				}
+		}
+	}
+	`
+
+	# function to check the necessity on spawning of new points
+
+	check_for_spawn: () ->
+		for flow_f in @flows.features
+			if flow_f.step_from_spawn >= flow_f.steps_to_spawn
+				switch true
+					when ( +flow_f.value > 0 )
+						o = flow_f.geometry.coordinates[0].slice(0)
+						d = flow_f.geometry.coordinates[1].slice(0)
+					when ( +flow_f.value < 0 )
+						o = flow_f.geometry.coordinates[1].slice(0)
+						d = flow_f.geometry.coordinates[0].slice(0)
+					else
+						o = 0
+						d = 0
+
+				d_x = @kdelta*( d[0] - o[0] )
+				d_y = @kdelta*( d[1] - o[1] )
+
+
+				@points.features.push {
+					"type": "Feature",
+					"geometry": {
+						"type": "Point",
+						coordinates: o,
+					}
+					on_flow: flow_f,
+					origin: o,
+					destination: d,
+					delta_x: d_x,
+					delta_y: d_y,
+					step: 0,
+				}
+				flow_f.step_from_spawn = 0
+			else
+				flow_f.step_from_spawn += 1
+
+
+
+
 	flush_points_data: ->
-		if @map.loaded()
-			@map.getSource('points').setData(@points)
+		@map.getSource('points').setData(@points)
 
 
 	
@@ -418,27 +420,19 @@ class Flows_map
 $.get('/transferts.json?level=area', {dataType: 'json'}, (data)->
 
 	my_map = new Flows_map( data, {
-
 		# //Kyiv
 		# 50°27′N 	30°31′E
 		# center = [30.445, 50.5166]
 		center: [30.5, 49.0],
-
 		# 1/(how many steps from origin to destination)
 		# kdelta = 0.005  500 steps(frames) from origin to destination
-		kdelta: 0.002,
-
+		kdelta: 0.01,
 		# 1/(how often points will spawm) ( kspawn = 500  will spawm point every 500 frame for flow value = 1) 
-		kspawn: 800,
-
+		kspawn: 200,
 		# spread of flow values from 0 to normal_spread (20)
 		normal_spread: 20,
-
 		areas_path: "/areas.json"
-
 	});
-
-	my_map.preprocessdata();
 
 	my_map.setupmap({
 		#// container id
