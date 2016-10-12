@@ -363,21 +363,14 @@ class window.Flows_map
 						zoom: my_m.next_zoom
 					});
 
-					# event = new CustomEvent('change_level', {
-					# 	'detail': {
-					# 		'level': my_m.level + 1,
-					# 		'area_id': features[0].properties.title
-					# 		}
-					# });
-
-					# window.dispatchEvent(event);
-
-					m.fire( 'change_level', {
-						'detail': {
-							'level': my_m.level + 1,
-							'area_id': features[0].properties.title
-							}
-					})
+					m.on('moveend', (e) ->
+						m.fire( 'change_level', {
+							'detail': {
+								'level': my_m.level + 1,
+								'area_id': features[0].properties.title
+								}
+						})
+					)
 
 			);
 		);
