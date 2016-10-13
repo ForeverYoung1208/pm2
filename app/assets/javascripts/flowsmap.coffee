@@ -357,22 +357,26 @@ class window.Flows_map
 				if features.length
 					y = features[0].properties.center.split(',')[0]
 					x = features[0].properties.center.split(',')[1]
+					m.is_flying_to = features[0].properties.id
 
 					m.flyTo({
 						center: [x,y],
 						zoom: my_m.next_zoom
 					});
-
-					m.on('moveend', (e) ->
-						m.fire( 'change_level', {
-							'detail': {
-								'level': my_m.level + 1,
-								'area_id': features[0].properties.title
-								}
-						})
-					)
-
 			);
+
+			@on('moveend', (e) ->
+				if m.is_flying_to
+					m.fire( 'change_level', {
+						'detail': {
+							'level': my_m.level + 1,
+							'area_id': m.is_flying_to
+							}
+					})
+					m.is_flying_to = false
+			)
+
+
 		);
 
 

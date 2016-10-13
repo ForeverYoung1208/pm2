@@ -32,7 +32,7 @@ class Area
 		self.each do |a| 
 			a.unset(:'properties.id', :'properties.communities_count', :'properties.bounds')
 		end
-		self.where(:'properties.level'=> 'area').update( :'properties.level'=> 1)
+		self.where(:'properties.level'=> 'area').update_all( :'properties.level'=> 1)
 
 	end
 

@@ -15,5 +15,5 @@
 // NOT require turbolinks
 // NOT require_tree .
 //= require flowsmap
-//= require map-level1
+//= require map-instance
 

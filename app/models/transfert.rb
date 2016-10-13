@@ -48,7 +48,7 @@ class Transfert
 				self.area = a
 				self.coord_x = a.properties["center"][1]
 				self.coord_y = a.properties["center"][0]
-				self.level = "area"
+				self.level = a.properties["level"]
 				self.save!
 			end
 		end
