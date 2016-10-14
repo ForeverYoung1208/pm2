@@ -38,6 +38,7 @@ class window.Flows_map
 		@next_zoom = init_data.next_zoom
 
 		@level = init_data.level
+		@next_level = init_data.next_level
 
 		@setupmap( map_params )
 
@@ -355,12 +356,12 @@ class window.Flows_map
 			@on('click', (e) ->
 				features = m.queryRenderedFeatures(e.point, { layers: ['areas_fill_layer'] });
 				if features.length
-					y = features[0].properties.center.split(',')[0]
-					x = features[0].properties.center.split(',')[1]
+					my_m.next_y = features[0].properties.center.split(',')[0]
+					my_m.next_x = features[0].properties.center.split(',')[1]
 					m.is_flying_to = features[0].properties.id
 
 					m.flyTo({
-						center: [x,y],
+						center: [my_m.next_x,my_m.next_y],
 						zoom: my_m.next_zoom
 					});
 			);
@@ -369,8 +370,9 @@ class window.Flows_map
 				if m.is_flying_to
 					m.fire( 'change_level', {
 						'detail': {
-							'level': my_m.level + 1,
-							'area_id': m.is_flying_to
+							'level': my_m.next_level,
+							'area_id': m.is_flying_to,
+							'new_center': [my_m.next_x,my_m.next_y]
 							}
 					})
 					m.is_flying_to = false
