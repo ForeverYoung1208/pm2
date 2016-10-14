@@ -3,13 +3,10 @@ class Area
 	field :geometry, type: Hash
 	field :properties, type: Hash
 	has_one :transfert
-	# field :title, type: Sring
-	# field :level, type: Sring
-	# field :bounds, type: Sring
-	# field :level, type: Array
-	# field :center, type: Array
+	belongs_to :area
 
-
+	has_one :parent , class_name: "Area", inverse_of: :children
+	has_many :children, class_name: "Area", inverse_of: :parent
 
 #  include Mongoid::Attributes::Dynamic
 
@@ -28,12 +25,20 @@ class Area
 
 #Clean up loaded areas from unuseful garbage
 
-	def self.cleanup_areas
+	def self.cleanup_from_file
 		self.each do |a| 
 			a.unset(:'properties.id', :'properties.communities_count', :'properties.bounds')
 		end
 		self.where(:'properties.level'=> 'area').update_all( :'properties.level'=> 1)
 
 	end
+
+	def self.gather_from_vybory
+
+
+		# http://info-vybory.in.ua/ivservlets/geometry?level=2&koatuu=1200000000&dtfrom=2016-10-14
+	end
+
+
 
 end
