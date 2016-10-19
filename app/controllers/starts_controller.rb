@@ -14,7 +14,7 @@ class StartsController < ApplicationController
   def load_areas_from_json_file
     Area.destroy_all
     Area.load_areas_from_json_file('db/oblasti_json2.txt')
-    Area.cleanup_areas
+    Area.cleanup_from_file
     @areas = Area.all
   end
 
