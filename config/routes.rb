@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   resources :areas
   
   get 'starts/build_links_to_area' => 'starts#build_links_to_area', as: 'build_links_to_area'
-  get 'starts/load_areas_from_json_file' => 'starts#load_areas_from_json_file', as: 'load_areas_from_json_file'
+  get 'starts/load_areas1_from_json_file' => 'starts#load_areas1_from_json_file', as: 'load_areas1_from_json_file'
+  get 'starts/load_areas2_from_json_file' => 'starts#load_areas2_from_json_file', as: 'load_areas2_from_json_file'
+  get 'starts/load_areas3_from_json_file' => 'starts#load_areas3_from_json_file', as: 'load_areas3_from_json_file'
   get 'starts/reload_linktable' => 'starts#reload_linktable', as: 'reload_linktable'
   get 'starts/attach_transfert_values' => 'starts#attach_transfert_values', as: 'attach_transfert_values'
   get 'transferts_map' => 'transferts#map', as: :transferts_map

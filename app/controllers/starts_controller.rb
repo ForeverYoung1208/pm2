@@ -11,12 +11,20 @@ class StartsController < ApplicationController
     @affected_rows = Transfert.attach_transfert_values('db/budget.csv')
   end
 
-  def load_areas_from_json_file
+  def load_areas1_from_json_file
     Area.destroy_all
-    Area.load_areas_from_json_file('db/oblasti_json2.txt')
-    Area.cleanup_from_file
+    Area.load_areas1_from_json_file('db/oblasti_json1.txt')
+    Area.cleanup1_from_file
     @areas = Area.all
   end
+
+  def load_areas2_from_json_file
+    Area.destroy_all
+    Area.load_areas2_from_json_file('db/oblasti_json2.txt')
+    #Area.cleanup2_from_file
+    @areas = Area.all
+  end
+
 
   def build_links_to_area
     @transferts = Transfert.all
