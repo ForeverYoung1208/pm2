@@ -26,6 +26,21 @@ class StartsController < ApplicationController
   end
 
 
+  def populate_fake_data
+    params[:levels].each do |level|
+      
+    end
+
+
+
+
+
+
+    logger.debug params
+    render nothing: true
+  end
+
+
   def build_links_to_area
     @transferts = Transfert.all
     @transferts.each do |t|
